@@ -1,20 +1,162 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+const config = {
+  darkMode: ["class"],
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
   ],
+  prefix: "",
   theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      colors: {
+        text: {
+          light: {
+            100: "#ceced1",
+            200: "#9d9da4",
+            300: "#6c6b76",
+            400: "#3b3a49",
+            500: "#0a091b",
+            600: "#080716",
+            700: "#060510",
+            800: "#04040b",
+            900: "#020205",
+          },
+          dark: {
+            100: "#fafafd",
+            200: "#f5f4fb",
+            300: "#efeffa",
+            400: "#eae9f8",
+            500: "#e5e4f6",
+            600: "#b7b6c5",
+            700: "#898994",
+            800: "#5c5b62",
+            900: "#2e2e31",
+          },
+        },
+        background: {
+          light: {
+            100: "#f9f9fd",
+            200: "#f3f3fb",
+            300: "#edecf9",
+            400: "#e7e6f7",
+            500: "#e1e0f5",
+            600: "#b4b3c4",
+            700: "#878693",
+            800: "#5a5a62",
+            900: "#2d2d31",
+          },
+          dark: {
+            100: "#ceced2",
+            200: "#9d9da5",
+            300: "#6d6c79",
+            400: "#3c3b4c",
+            500: "#0b0a1f",
+            600: "#090819",
+            700: "#070613",
+            800: "#04040c",
+            900: "#020206",
+          },
+        },
+        primary: {
+          light: {
+            100: "#d4d3e2",
+            200: "#aaa7c4",
+            300: "#7f7ba7",
+            400: "#554f89",
+            500: "#2a236c",
+            600: "#221c56",
+            700: "#191541",
+            800: "#110e2b",
+            900: "#080716",
+          },
+          dark: {
+            100: "#ebe9f8",
+            200: "#d7d4f1",
+            300: "#c2beea",
+            400: "#aea9e3",
+            500: "#9a93dc",
+            600: "#7b76b0",
+            700: "#5c5884",
+            800: "#3e3b58",
+            900: "#1f1d2c",
+          },
+        },
+        secondary: {
+          light: {
+            100: "#f6e5ef",
+            200: "#eecbe0",
+            300: "#e5b1d0",
+            400: "#dd97c1",
+            500: "#d47db1",
+            600: "#aa648e",
+            700: "#7f4b6a",
+            800: "#553247",
+            900: "#2a1923",
+          },
+          dark: {
+            100: "#e6d5df",
+            200: "#cdaabf",
+            300: "#b4809f",
+            400: "#9b557f",
+            500: "#822b5f",
+            600: "#68224c",
+            700: "#4e1a39",
+            800: "#341126",
+            900: "#1a0913",
+          },
+        },
+        accent: {
+          light: {
+            100: "#f0d8de",
+            200: "#e1b1bd",
+            300: "#d3899d",
+            400: "#c4627c",
+            500: "#b53b5b",
+            600: "#912f49",
+            700: "#6d2337",
+            800: "#481824",
+            900: "#240c12",
+          },
+          dark: {
+            100: "#f3dbe1",
+            200: "#e7b7c4",
+            300: "#dc92a6",
+            400: "#d06e89",
+            500: "#c44a6b",
+            600: "#9d3b56",
+            700: "#762c40",
+            800: "#4e1e2b",
+            900: "#270f15",
+          },
+        },
       },
     },
   },
-  plugins: [],
-};
+  plugins: [require("tailwindcss-animate")],
+} satisfies Config;
+
 export default config;
