@@ -8,9 +8,20 @@ import { toast } from "sonner";
 interface ComponentProps {
   original_url: string;
   shorten_url: string;
+  onDeleteFn: ({
+    original_url,
+    shorten_url,
+  }: {
+    original_url: string;
+    shorten_url: string;
+  }) => void;
 }
 
-export function ShortenCard({ original_url, shorten_url }: ComponentProps) {
+export function ShortenCard({
+  original_url,
+  shorten_url,
+  onDeleteFn,
+}: ComponentProps) {
   const [copiedText, copy] = useCopyToClipboard();
 
   const _onCopy = () => {
@@ -20,10 +31,12 @@ export function ShortenCard({ original_url, shorten_url }: ComponentProps) {
     });
   };
 
-  const _onDelete = () => {};
+  const _onDelete = () => {
+    onDeleteFn({ original_url, shorten_url });
+  };
 
   return (
-    <Card className="bg-background-light-100 dark:bg-background-dark-600">
+    <Card className="bg-background-light-100 shadow dark:bg-background-dark-600">
       <CardContent className="flex flex-col gap-4 p-6">
         <div className="flex flex-col justify-between gap-4 sm:flex-row">
           <div className="flex flex-col gap-1">
