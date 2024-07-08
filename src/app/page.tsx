@@ -1,5 +1,6 @@
-import { Navbar } from "../components/Navbar";
-import { ShortenForm } from "../components/ShortenForm";
+import { ShortenList } from "@/components/ShortenList";
+import { Navbar } from "@/components/Navbar";
+import { ShortenForm } from "@/components/ShortenForm";
 
 export default function Home() {
   return (
@@ -17,46 +18,8 @@ export default function Home() {
             <ShortenForm />
           </div>
         </section>
-        <section id="shorten-result" className="h-96"></section>
+        <ShortenList />
       </main>
     </>
   );
 }
-
-// "use client";
-
-// import { shorteningURLAction } from "@/lib/actions/shorteningURLAction";
-// import { useFormState } from "react-dom";
-
-// export default function Home() {
-//   const [state, action] = useFormState(shorteningURLAction, {
-//     original_url: "",
-//     shortened_url: "",
-//     error: null,
-//   });
-
-//   return (
-//     <>
-//       <main className="relative w-full flex flex-col justify-center items-center">
-//         <form action={action} className="flex flex-col gap-4">
-//           <input
-//             type="text"
-//             name="original_url"
-//             placeholder="URL You want to shortened"
-//             required
-//           ></input>
-//           <input
-//             type="text"
-//             name="shortened_url"
-//             placeholder="Shortened URL"
-//           ></input>
-//           <button type="submit" className="border rounded-lg py-2">
-//             Create
-//           </button>
-//         </form>
-//         {state.original_url}
-//         {state.shortened_url}
-//       </main>
-//     </>
-//   );
-// }
