@@ -74,18 +74,20 @@ export function ShortenList() {
 
   return (
     <>
-      {isMounted &&
-        links?.map((l, key) => (
-          <section key={key} id="shorten-list" className="py-16">
-            <div className="mx-auto flex max-w-xl flex-col gap-4 px-4">
+      {isMounted && (
+        <section id="shorten-list" className="py-16">
+          <div className="mx-auto flex max-w-xl flex-col gap-4 px-4">
+            {links?.map((l, key) => (
               <ShortenCard
+                key={key}
                 original_url={l.original_url}
                 shorten_url={l.shorten_url}
                 onDeleteFn={onDeleteTriggerFn}
               />
-            </div>
-          </section>
-        ))}
+            ))}
+          </div>
+        </section>
+      )}
       {isDesktop ? (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogContent className="bg-background-light-100 dark:bg-background-dark-600 sm:max-w-[425px]">
