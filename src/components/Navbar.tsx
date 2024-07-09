@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ToggleThemeButton } from "./ToggleThemeButton";
+import { Button } from "./ui/button";
+import { GithubIcon } from "lucide-react";
 
 export function Navbar() {
   return (
@@ -12,6 +14,15 @@ export function Navbar() {
           <h1 className="text-2xl font-bold">COPAS</h1>
         </Link>
         <div className="flex items-center gap-4">
+          <Link href={"https://github.com/vanirvan/Copas"}>
+            <Button
+              size={"icon"}
+              variant={"outline"}
+              className="hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+            >
+              <GithubIcon size={16} />
+            </Button>
+          </Link>
           <ToggleThemeButton />
         </div>
       </div>
