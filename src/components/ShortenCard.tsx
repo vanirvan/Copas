@@ -1,20 +1,13 @@
 import { CopyIcon, TrashIcon } from "lucide-react";
 
-import { Button } from "./ui/button";
-import { Card, CardContent } from "./ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { useCopyToClipboard } from "usehooks-ts";
 import { toast } from "sonner";
+import type { Link as LinkType } from "@/lib/types/link-type";
 
-interface ComponentProps {
-  original_url: string;
-  shorten_url: string;
-  onDeleteFn: ({
-    original_url,
-    shorten_url,
-  }: {
-    original_url: string;
-    shorten_url: string;
-  }) => void;
+interface ComponentProps extends LinkType {
+  onDeleteFn: ({ original_url, shorten_url }: LinkType) => void;
 }
 
 export function ShortenCard({

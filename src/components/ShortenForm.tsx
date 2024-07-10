@@ -12,26 +12,21 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { shorteningURLAction } from "@/lib/actions/shorteningURLAction";
-
-interface LocalData {
-  original_url: string;
-  shorten_url: string;
-}
-
-interface FormState {
-  url: string;
-  alias: string;
-}
+import type { Link as LinkType } from "@/lib/types/link-type";
 
 export function ShortenForm() {
-  const [formState, setFormState] = useState<FormState>({ url: "", alias: "" });
+  const [formState, setFormState] = useState<LinkType>({
+    original_url: "",
+    shorten_url: "",
+  });
+
   const [state, action] = useFormState(shorteningURLAction, {
-    url: "",
-    alias: "",
+    original_url: "",
+    shorten_url: "",
     error: null,
   });
 
-  const [links, setLinks, removeLinks] = useLocalStorage<LocalData[]>(
+  const [links, setLinks, removeLinks] = useLocalStorage<LinkType[]>(
     "copas-links",
     [],
   );
@@ -45,30 +40,28 @@ export function ShortenForm() {
   const _onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData: FormData = new FormData();
-    formData.append("url", formState.url);
-    formData.append("alias", formState.alias);
+    formData.append("original_url", formState.original_url);
+    formData.append("shorten_url", formState.shorten_url);
 
     action(formData);
   };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (
-        state.url !== null &&
-        state.url !== "" &&
-        state.alias !== null &&
-        state.alias !== ""
-      ) {
+      if (state.original_url !== "" && state.shorten_url !== "") {
         setLinks((prev) => [
-          { original_url: state.url!, shorten_url: state.alias! },
+          {
+            original_url: state.original_url!,
+            shorten_url: state.shorten_url!,
+          },
           ...prev,
         ]);
 
         toast.success("New Shorten URL has been created!", {
-          description: state.alias,
+          description: state.shorten_url,
           action: {
             label: "Copy",
-            onClick: () => copyLinkFn(state.alias),
+            onClick: () => copyLinkFn(state.shorten_url),
           },
         });
       }
@@ -90,39 +83,42 @@ export function ShortenForm() {
               name="original_url"
               placeholder="Enter your URL"
               required
-              value={formState.url}
+              value={formState.original_url}
               onChange={(e) =>
-                setFormState((prev) => ({ ...prev, url: e.target.value }))
+                setFormState((prev) => ({
+                  ...prev,
+                  original_url: e.target.value,
+                }))
               }
               className="bg-background-light-100 dark:bg-background-dark-700"
             />
             <p className="text-sm font-light text-red-500">
-              {state.error?.url}
+              {state.error?.original_url}
             </p>
           </div>
           <div className="space-y-2">
             <Label htmlFor="alias">Alias</Label>
             <Input
               id="alias"
-              name="alias"
+              name="shorten_url"
               placeholder="Enter an alias (optional)"
               maxLength={32}
               required
-              value={formState.alias}
+              value={formState.shorten_url}
               onChange={(e) =>
                 setFormState((prev) => ({
                   ...prev,
-                  alias: e.target.value,
+                  shorten_url: e.target.value,
                 }))
               }
               className="bg-background-light-100 dark:bg-background-dark-700"
             />
             <p className="text-sm font-light text-red-500">
-              {state.error?.alias}
+              {state.error?.shorten_url}
             </p>
             <p className="break-words text-sm font-light text-neutral-400">
               Your url would be {process.env.NEXT_PUBLIC_APP_URL}/
-              {formState.alias}
+              {formState.shorten_url}
             </p>
           </div>
         </form>

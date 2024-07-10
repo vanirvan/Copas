@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ToggleThemeButton } from "./ToggleThemeButton";
-import { Button } from "./ui/button";
+import { ToggleThemeButton } from "@/components/ToggleThemeButton";
+import { Button } from "@/components/ui/button";
 import { GithubIcon } from "lucide-react";
 
 export function Navbar() {

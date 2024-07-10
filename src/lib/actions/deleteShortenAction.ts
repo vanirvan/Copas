@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "../db/prisma";
+import { prisma } from "@/lib/db/prisma";
 
 export async function deleteShortenAction(
   data: void | null,
@@ -10,10 +10,18 @@ export async function deleteShortenAction(
   const getAlias = shorten_url?.toString().split("/")!;
 
   await prisma.$connect();
-  await prisma.link.delete({
+  const checkLink = await prisma.link.findFirst({
     where: {
       shorten_url: getAlias[getAlias.length - 1],
     },
   });
+
+  if (checkLink) {
+    await prisma.link.delete({
+      where: {
+        shorten_url: getAlias[getAlias.length - 1],
+      },
+    });
+  }
   await prisma.$disconnect();
 }

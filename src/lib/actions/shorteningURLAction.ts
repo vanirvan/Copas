@@ -2,81 +2,73 @@
 
 import { prisma } from "@/lib/db/prisma";
 import { validateUrl } from "@/lib/validation/urlValidation";
+import type {
+  Link as LinkType,
+  LinkError as LinkErrorType,
+} from "@/lib/types/link-type";
 
-interface AcceptedValue {
-  url: string | null;
-  alias: string | null;
-}
+type InitialValue = LinkType & {
+  error: ErrorMessage | null;
+};
 
-interface ErrorValue {
-  url: string[] | null;
-  alias: string[] | null;
-  general_error: string[] | null;
-}
-
-export interface InitialValue extends AcceptedValue {
-  error: ErrorValue | null;
-}
+type ErrorMessage = LinkErrorType & {
+  general_error: string[];
+};
 
 export async function shorteningURLAction(
   initialValue: InitialValue,
   formData: FormData,
 ) {
-  const url = formData.get("url");
-  const alias = formData.get("alias");
+  const original_url = formData.get("original_url") as string;
+  const shorten_url = formData.get("shorten_url") as string;
 
   // validate
-  const validate = await validateUrl({
-    url: url as string,
-    alias: alias as string,
-  });
-
-  let returnedValue: AcceptedValue | null = null;
-  let errorValue: ErrorValue | null = null;
+  const validate = await validateUrl({ original_url, shorten_url });
 
   if (!validate.status) {
-    errorValue = {
-      url: validate.error?.url as string[],
-      alias: validate.error?.alias as string[],
-      general_error: null,
-    };
-
     return {
-      url: null,
-      alias: null,
-      error: errorValue,
-    };
+      original_url: "",
+      shorten_url: "",
+      error: {
+        original_url: validate.error?.original_url
+          ? (validate.error.original_url as string[])
+          : [],
+        shorten_url: validate.error?.shorten_url
+          ? (validate.error.shorten_url as string[])
+          : [],
+        general_error: [],
+      },
+    } satisfies InitialValue;
   }
 
   // post data
   try {
     await prisma.$connect();
-    const createNewShorten = await prisma.link.create({
+    const createNewLink = await prisma.link.create({
       data: {
-        original_url: url as string,
-        shorten_url: alias as string,
+        original_url,
+        shorten_url,
       },
     });
 
-    returnedValue = {
-      url: createNewShorten.original_url,
-      alias: `${process.env.NEXT_PUBLIC_APP_URL}/${createNewShorten.shorten_url}`,
-    };
+    return {
+      original_url: createNewLink.original_url,
+      shorten_url: createNewLink.shorten_url,
+      error: null,
+    } satisfies InitialValue;
   } catch (e) {
     console.error("ERROR WHEN SHORTENING URL");
     console.error(e);
-    errorValue = {
-      url: null,
-      alias: null,
-      general_error: ["Something went wrong, try again later."],
-    };
+    return {
+      original_url: "",
+      shorten_url: "",
+      error: {
+        original_url: [],
+        shorten_url: [],
+        general_error: ["Something went wrong, try again later."],
+      },
+    } satisfies InitialValue;
   } finally {
     await prisma.$disconnect();
   }
-
-  return {
-    url: returnedValue?.url!,
-    alias: returnedValue?.alias!,
-    error: errorValue == null ? null : errorValue,
-  } satisfies InitialValue;
 }

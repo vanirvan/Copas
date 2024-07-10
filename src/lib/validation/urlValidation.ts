@@ -1,14 +1,15 @@
 import { z } from "zod";
-import { prisma } from "../db/prisma";
+import { prisma } from "@/lib/db/prisma";
+import type { Link as LinkType } from "@/lib/types/link-type";
 
 const allowedCharRegex = /^[a-zA-Z0-9-_]+$/;
 
 export const urlValidationSchema = z.object({
-  url: z.string().url({ message: "Url is not a string" }),
-  alias: z
+  original_url: z.string().url({ message: "Url is not a string" }),
+  shorten_url: z
     .string()
     .min(6, { message: "minimum character is 6" })
-    .max(32, { message: "maximum character is 16" })
+    .max(32, { message: "maximum character is 32" })
     .refine((alias) => allowedCharRegex.test(alias), {
       message:
         "only alphanumeric, hyphen (-) and underscores characters allowed, please change it",
@@ -33,29 +34,8 @@ export const urlValidationSchema = z.object({
     ),
 });
 
-type UrlValidationProps = z.infer<typeof urlValidationSchema>;
-
-type ValidateFunctionReturnType =
-  | {
-      status: true;
-      data: UrlValidationProps;
-    }
-  | {
-      status: false;
-      error:
-        | {
-            url?: string[] | undefined;
-            alias?: string[] | undefined;
-          }
-        | undefined;
-    };
-
-export async function validateUrl(
-  props: UrlValidationProps,
-): Promise<ValidateFunctionReturnType> {
+export async function validateUrl(props: LinkType) {
   const validate = await urlValidationSchema.safeParseAsync(props);
-  console.log(validate);
-
   if (!validate.success) {
     return {
       status: false,

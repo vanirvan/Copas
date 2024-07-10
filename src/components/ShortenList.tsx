@@ -2,41 +2,37 @@
 
 import { useEffect, useState } from "react";
 import { useLocalStorage, useMediaQuery } from "usehooks-ts";
-import { ShortenCard } from "./ShortenCard";
+import { ShortenCard } from "@/components/ShortenCard";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
-} from "./ui/dialog";
+} from "@/components/ui/dialog";
 import {
   Drawer,
   DrawerContent,
   DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-} from "./ui/drawer";
+} from "@/components/ui/drawer";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { useFormState } from "react-dom";
 import { deleteShortenAction } from "@/lib/actions/deleteShortenAction";
-
-interface Links {
-  original_url: string;
-  shorten_url: string;
-}
+import type { Link as LinkType } from "@/lib/types/link-type";
 
 export function ShortenList() {
   const [isMounted, setIsMounted] = useState(false);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-  const [dialogData, setDialogData] = useState<Links>({
+  const [dialogData, setDialogData] = useState<LinkType>({
     original_url: "",
     shorten_url: "",
   });
 
   const [state, deleteAction] = useFormState(deleteShortenAction, null);
 
-  const [links, setLinks, removeLinks] = useLocalStorage<Links[]>(
+  const [links, setLinks, removeLinks] = useLocalStorage<LinkType[]>(
     "copas-links",
     [],
   );
@@ -74,7 +70,7 @@ export function ShortenList() {
 
   return (
     <>
-      {isMounted && (
+      {isMounted && links.length > 0 && (
         <section id="shorten-list" className="py-16">
           <div className="mx-auto flex max-w-xl flex-col gap-4 px-4">
             {links?.map((l, key) => (
