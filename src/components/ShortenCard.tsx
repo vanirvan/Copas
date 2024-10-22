@@ -18,7 +18,7 @@ export function ShortenCard({
   const [copiedText, copy] = useCopyToClipboard();
 
   const _onCopy = () => {
-    copy(shorten_url);
+    copy(`${process.env.NEXT_PUBLIC_APP_URL}/${shorten_url}`);
     toast("URL Copied!", {
       description: copiedText,
     });

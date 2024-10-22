@@ -66,7 +66,10 @@ export function ShortenForm() {
           description: state.shorten_url,
           action: {
             label: "Copy",
-            onClick: () => copyLinkFn(state.shorten_url),
+            onClick: () =>
+              copyLinkFn(
+                `${process.env.NEXT_PUBLIC_APP_URL}/${state.shorten_url}`,
+              ),
           },
         });
       }
