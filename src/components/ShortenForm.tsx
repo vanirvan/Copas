@@ -69,9 +69,8 @@ export function ShortenForm() {
             onClick: () => copyLinkFn(state.shorten_url),
           },
         });
-
-        setDisableSubmitButton(false);
       }
+      setDisableSubmitButton(false);
     }
   }, [state, setLinks, copyLinkFn]);
 
