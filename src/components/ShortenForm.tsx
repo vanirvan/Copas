@@ -34,7 +34,7 @@ export function ShortenForm() {
 
   const randomizeAlias = () => {
     const generate = nanoid(10);
-    setFormState((prev) => ({ ...prev, alias: generate }));
+    setFormState((prev) => ({ ...prev, shorten_url: generate }));
   };
 
   const _onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -43,8 +43,13 @@ export function ShortenForm() {
     formData.append("original_url", formState.original_url);
     formData.append("shorten_url", formState.shorten_url);
 
+    setDisableSubmitButton(true);
+
     action(formData);
   };
+
+  const [disableSubmitButton, setDisableSubmitButton] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -64,6 +69,8 @@ export function ShortenForm() {
             onClick: () => copyLinkFn(state.shorten_url),
           },
         });
+
+        setDisableSubmitButton(false);
       }
     }
   }, [state, setLinks, copyLinkFn]);
@@ -130,7 +137,8 @@ export function ShortenForm() {
         <div className="flex w-full items-center justify-end gap-4">
           <Button
             type="button"
-            onClick={randomizeAlias}
+            disabled={disableSubmitButton}
+            onClick={() => randomizeAlias()}
             className="flex items-center gap-2 bg-accent-light-500 hover:bg-accent-light-400 dark:bg-accent-light-500 dark:text-white hover:dark:bg-accent-dark-400"
           >
             <Dice5Icon size={16} />
@@ -139,6 +147,7 @@ export function ShortenForm() {
           <Button
             type="submit"
             form="shorten-form"
+            disabled={disableSubmitButton}
             className="bg-primary-light-500 hover:bg-primary-light-400 dark:bg-primary-dark-600 dark:text-white hover:dark:bg-primary-dark-500"
           >
             Shorten
